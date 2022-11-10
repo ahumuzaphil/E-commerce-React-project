@@ -10,18 +10,20 @@ import allPants from './datap.js'
 import navfunction from './navfunction'
 
 function App() {
-  const [isItem, setIsItem] = React.useState([allItem , allPants , navfunction])
+  // const [isItem, setIsItem] = React.useState([allItem , allPants , navfunction])
   const [ isNavFunc, setIsNavFunc ] = React.useState(navfunction);
 
   const parentArray = isNavFunc
   const childArray = parentArray[0].count
 
-  function Shop(e) {
-    // e.preventDefault()
+  function Shop(item) {
     setIsNavFunc(
       isNavFunc.map((obj) => {
         if(obj.count === childArray){
-          return { ...obj, count: childArray + 1 }
+          let newAmount = obj.amount + item.price;
+          return { ...obj, count: childArray + 1, amount: Math.round(newAmount * 100)/100 }
+          // this bit Math.round(newAmount * 100)/100 is just to round off the amount to 1 decimal place 
+          // but the importnat bit is the newAmount variable 
         }
         return obj
       })
@@ -32,17 +34,20 @@ function App() {
     return <Navbar key={items.work} item={items} />
   })
 
-  const itemElement = isItem[0].map((items) => {
+  const itemElement = allItem.map((items) => {
     return (
       <div>
-        <Shirts key={items.id} item={items} onclick={Shop} />
+        <Shirts key={items.id} item={items} 
+        onclick={() => {
+          Shop(items); 
+          }} />
       </div>
     )
   })
-  const pantsElement = isItem[1].map((items) => {
+  const pantsElement = allPants.map((items) => {
     return (
       <div>
-        <Pants key={items.num} item={items} onclick={Shop} />
+        <Pants key={items.num} item={items} onclick={() => Shop(items)} />
       </div>
     )
   })
